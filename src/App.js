@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import SimpleAppBar from "./Common/Appbar";
 import Cart from "./Components/Cart";
@@ -7,6 +7,17 @@ import Orders from "./Components/Orders";
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    if (cartItems.length != 0)
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    let res = JSON.parse(localStorage.getItem("cart"));
+    return res.length > 0 ? setCartItems(res) : null;
+  }, []);
+
   const onAdd = (product) => {
     const exist = cartItems.find((x) => x.id === product.id);
     if (exist) {
